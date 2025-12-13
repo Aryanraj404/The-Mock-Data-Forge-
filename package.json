@@ -1,0 +1,23 @@
+{
+  "name": "mock_data_forge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "generator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@faker-js/faker": "^10.1.0",
+    "axios": "^1.13.2",
+    "ejs": "^3.1.10",
+    "express": "^5.2.1",
+    "mongodb": "^7.0.0",
+    "randexp": "^0.5.3",
+    "uuid": "^13.0.0"
+  }
+}
