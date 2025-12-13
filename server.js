@@ -140,5 +140,13 @@ app.post("/generate", async (req, res) => {
   }
 });
 
-/* -------------------- EXPORT FOR VERCEL -------------------- */
+const PORT = process.env.PORT || 3000;
+
+/* Run locally, but let Vercel handle serverless */
+if (process.env.VERCEL !== "1") {
+  app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+  });
+}
+
 export default app;
