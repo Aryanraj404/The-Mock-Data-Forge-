@@ -2,7 +2,7 @@ Mock Data Forge
 
 📖 Introduction
 
-Mock Data Forge is a schema-based mock data generator built as part of the CSEA Induction Task at .
+Mock Data Forge is a schema-based mock data generator built as part of the CSEA Induction Task.
 
 The project is a **Node.js / JavaScript-based web application** that allows users to define a data schema and generate realistic mock JSON data for development and testing purposes.
 

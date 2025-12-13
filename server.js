@@ -2,22 +2,31 @@ import express from "express";
 import bodyParser from "body-parser";
 import { generateData } from "./generator.js";
 import axios from "axios";
+import path from "path";
+import { fileURLToPath } from "url";
 
+/* -------------------- PATH FIX FOR VERCEL -------------------- */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+/* -------------------- APP SETUP -------------------- */
 const app = express();
-const PORT = 3000;
 
 const MAX_ROWS = 5000;
 const MAX_BATCH = 2000;
 
+/* -------------------- VIEW ENGINE & STATIC -------------------- */
 app.set("view engine", "ejs");
-app.use(express.static("public"));
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json({ limit: "2mb" }));
 
+/* -------------------- ROUTES -------------------- */
 app.get("/", (req, res) => {
-  res.render("index.ejs");
+  res.render("index");
 });
 
-
+/* -------------------- API FORWARDING LOGIC -------------------- */
 async function postToApi(rows, target) {
   const url = target.url;
   const headers = target.headers || { "Content-Type": "application/json" };
@@ -44,8 +53,7 @@ async function postToApi(rows, target) {
           sent: batch.length,
           data: resp.data,
         });
-
-        break; 
+        break;
 
       } catch (err) {
         if (attempts >= 3) {
@@ -56,8 +64,9 @@ async function postToApi(rows, target) {
             error: err.message || String(err),
           });
         } else {
-         
-          await new Promise((r) => setTimeout(r, 500 * Math.pow(2, attempts)));
+          await new Promise((r) =>
+            setTimeout(r, 500 * Math.pow(2, attempts))
+          );
         }
       }
     }
@@ -66,7 +75,7 @@ async function postToApi(rows, target) {
   return results;
 }
 
-
+/* -------------------- GENERATE ENDPOINT -------------------- */
 app.post("/generate", async (req, res) => {
   try {
     const { schema, rows = 1, target = null, dryRun = false } = req.body;
@@ -80,29 +89,31 @@ app.post("/generate", async (req, res) => {
 
     const count = Math.min(MAX_ROWS, Number(rows) || 1);
 
-
     const generatedRows = [];
     for (let i = 0; i < count; i++) {
       generatedRows.push(generateData(schema));
     }
 
-   
+    /* ---------- DRY RUN / NO TARGET ---------- */
     if (dryRun || !target || !target.type) {
       let out = "";
       for (const obj of generatedRows) {
         out += JSON.stringify(obj, null, 2) + "\n\n";
       }
-      res.type("text/plain").send(out);
-      return;
+      return res.type("text/plain").send(out);
     }
 
-
+    /* ---------- API FORWARDING ---------- */
     if (target.type === "api") {
       if (
         !target.url ||
-        (!target.url.startsWith("http://") && !target.url.startsWith("https://"))
+        (!target.url.startsWith("http://") &&
+          !target.url.startsWith("https://"))
       ) {
-        return res.status(400).json({ ok: false, error: "Invalid API URL" });
+        return res.status(400).json({
+          ok: false,
+          error: "Invalid API URL",
+        });
       }
 
       const result = await postToApi(generatedRows, target);
@@ -129,7 +140,5 @@ app.post("/generate", async (req, res) => {
   }
 });
 
-
-app.listen(PORT, () => {
-  console.log(`Mock Data Generator running at http://localhost:${PORT}`);
-});
+/* -------------------- EXPORT FOR VERCEL -------------------- */
+export default app;
