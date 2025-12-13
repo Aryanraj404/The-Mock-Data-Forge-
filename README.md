@@ -1,13 +1,17 @@
-Mock Data Forge
+# Mock Data Forge
 
 📖 Introduction
 
-Mock Data Forge is a schema-based mock data generator built as part of the CSEA Induction Task.
+Mock Data Forge is a schema-based mock data generator built as part of the **CSEA Induction Task**.
 
 The project is a **Node.js / JavaScript-based web application** that allows users to define a data schema and generate realistic mock JSON data for development and testing purposes.
 
-It can be run locally on any system using npm.  
-This README provides step-by-step instructions to set up and run the project on a local machine.
+It supports:
+- Running locally using npm
+- Hosting as an API/web app (deployed on Vercel)
+- Containerized execution using Docker (bonus)
+
+This README provides step-by-step instructions to set up and run the project.
 
 ---
 
@@ -17,6 +21,8 @@ This README provides step-by-step instructions to set up and run the project on 
 - Requirements  
 - Installation  
 - Running the Project  
+- Live Deployment  
+- Docker Support  
 - Folder Structure  
 - API Usage  
 - Troubleshooting  
@@ -32,9 +38,11 @@ Before running this project, make sure you have the following installed on your 
 - **npm** (comes with Node.js)
 - **Git**
 
+(Optional, for Docker support):
+- **Docker**
+
 Check installation using:
 
-```bash
 node -v
 npm -v
 git --version
@@ -52,20 +60,29 @@ cd The-Mock-Data-Forge-
 3️⃣ Install Dependencies
 npm install
 
-This command installs all required packages listed in package.json.
-
 ▶️ Running the Project Locally
 
 After installing dependencies, start the project using:
 
 npm start
 
-
-The server will start on localhost.
-
 Default URL:
 
 http://localhost:3000
 
+Live Deployment (Vercel)
 
-(Open this URL in your browser)
+The project is deployed on Vercel and is publicly accessible at:https://mock-data-forge.vercel.app/
+
+The project can also be run using Docker.
+
+Build the Docker image
+docker build -t mock-data-forge .
+
+Run the Docker container
+docker run -p 3000:3000 mock-data-forge
+
+
+Open in browser:
+
+http://localhost:3000
