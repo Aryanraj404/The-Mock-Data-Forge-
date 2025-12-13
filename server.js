@@ -5,28 +5,28 @@ import axios from "axios";
 import path from "path";
 import { fileURLToPath } from "url";
 
-/* -------------------- PATH FIX FOR VERCEL -------------------- */
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-/* -------------------- APP SETUP -------------------- */
+
 const app = express();
 
 const MAX_ROWS = 5000;
 const MAX_BATCH = 2000;
 
-/* -------------------- VIEW ENGINE & STATIC -------------------- */
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json({ limit: "2mb" }));
 
-/* -------------------- ROUTES -------------------- */
+
 app.get("/", (req, res) => {
   res.render("index");
 });
 
-/* -------------------- API FORWARDING LOGIC -------------------- */
+
 async function postToApi(rows, target) {
   const url = target.url;
   const headers = target.headers || { "Content-Type": "application/json" };
@@ -75,7 +75,7 @@ async function postToApi(rows, target) {
   return results;
 }
 
-/* -------------------- GENERATE ENDPOINT -------------------- */
+
 app.post("/generate", async (req, res) => {
   try {
     const { schema, rows = 1, target = null, dryRun = false } = req.body;
@@ -94,7 +94,7 @@ app.post("/generate", async (req, res) => {
       generatedRows.push(generateData(schema));
     }
 
-    /* ---------- DRY RUN / NO TARGET ---------- */
+    
     if (dryRun || !target || !target.type) {
       let out = "";
       for (const obj of generatedRows) {
@@ -103,7 +103,7 @@ app.post("/generate", async (req, res) => {
       return res.type("text/plain").send(out);
     }
 
-    /* ---------- API FORWARDING ---------- */
+    
     if (target.type === "api") {
       if (
         !target.url ||
@@ -142,7 +142,7 @@ app.post("/generate", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-/* Run locally, but let Vercel handle serverless */
+
 if (process.env.VERCEL !== "1") {
   app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
