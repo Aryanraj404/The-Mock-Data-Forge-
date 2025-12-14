@@ -86,3 +86,6 @@ docker run -p 3000:3000 mock-data-forge
 Open in browser:
 
 http://localhost:3000
+
+
+When you open the website you can select fiedls (left side) and the number of rows (top right,beside Load example), and click generate
